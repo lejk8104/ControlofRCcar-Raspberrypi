@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6064776d-ef4c-4bb7-95b0-38d1307297fb}</ProjectGuid>
+    <ProjectGuid>{7992055a-05b8-47e3-9615-32a77d541588}</ProjectGuid>
     <Keyword>Linux</Keyword>
     <RootNamespace>ControlRcCar</RootNamespace>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
@@ -66,8 +66,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RcCar.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="RcCar.h" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
