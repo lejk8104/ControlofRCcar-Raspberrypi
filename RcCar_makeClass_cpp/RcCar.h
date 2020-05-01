@@ -57,7 +57,6 @@ class RcCar
 		digitalWrite(motor2_pin1, HIGH);		// Motor1 enable
 		digitalWrite(motor2_pin2, LOW);
 
-
 	}
 	void Left(int Value1, int Value2) {			//if angle A
 
