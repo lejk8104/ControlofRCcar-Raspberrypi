@@ -58,6 +58,9 @@ def setMotor(channel,speed,situation):
     #    setMotorControl(motor2IN1,motor2IN2)
         
 #Motor Control Main_method
+GPIO.setmode(GPIO.BCM)
+setPinConfig(motor1IN1,motor1IN2)
+
 
 #Forward 80% Speed
 setMotor(MOTOR1,80,Forward)
