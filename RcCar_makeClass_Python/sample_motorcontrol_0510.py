@@ -3,8 +3,7 @@ from time import sleep
 
 #Motor LIST
 MOTOR1 = 0
-#MOTOR2 = 1
-
+MOTOR2 = 1
 
 #status
 Stop =0
@@ -20,8 +19,8 @@ Right = 4
 #GPIO PIN
 motor1IN1 = 26       #DIR pin 
 motor1IN2 = 19       #PWM pin
-#motor2IN1 = 13      #DIR pin      
-#motor2IN2 = 6       ##PWM pin
+motor2IN1 = 13      #DIR pin      
+motor2IN2 = 6       ##PWM pin
 
 #PIN setting
 HIGH = 1
@@ -97,31 +96,29 @@ def forward(INA,INB,CurrentPWM,lastPWM):
     
 def setMotorControl(INA,INB,last_pwm,DutyCycle,situation):
     
-    #pwm.ChangeDutyCycle(DutyCycle)
-    
     #Forward
-    if status == Forward:
+    if situation == Forward:
         print("situation is forward")
         GPIO.output(INA,HIGH)
     #Backword
-    elif status == Backword:
+    elif situation == Backword:
         GPIO.output(INA,LOW)
+        """
     #Stop
-    elif status == Stop:
+    elif situation == Stop:
         print("situation is Backword")
         GPIO.output(INA,LOW)
-    
+        """
     # ISSUE Right and Left Mathod prameter is same for Forward
     #Right
-    elif status == Right:
+    elif situation == Right:
         print("situation is Right")
-        GPIO.output(INA,HIGH)
-        GPIO.output(INB,LOW)   
+        GPIO.output(INA,HIGH)  
     #Left
-    elif status == Left:
+    elif situation == Left:
         print("situation is left")
         GPIO.output(INA,HIGH)
-        GPIO.output(INB,LOW)
+
        
     # setting changed dutycycle    
     if last_pwm != DutyCycle:
@@ -149,26 +146,12 @@ while(True):
     print("if your want to terminate this program, enter 7")
     actural = int(input("enter your line postion \n"))
     if actural == 7:
-        
-    if
-    Movement,DutyCycle = isvaildPostion(line,actural)
-    #Forward 100% DutyCycle
-    if (Movement == Forward):
-        setMotor(MOTOR1,DutyCycle,Movement)
-        #setMotor(MOTOR2,DutyCycle,Movement)
-        #delay
-        sleep(5)
+        break
     else:
-        setMotor(MOTOR1,DutyCycle,Movement)
-        #setMotor(MOTOR2,DutyCycle,Movement)
-        #delay
-        sleep(5)
-
-
-
-
-    
-
+        Movement,DutyCycle = isvaildPostion(line,actural)
+        setMotor(MOTOR1,pwm1,DutyCycle,Movement)
+        setMotor(MOTOR2,pwm2,DutyCycle,Movement)
+        #Forward 100% DutyCycle
 
 #STOP
 setMotor(MOTOR1,80,Stop)
