@@ -18,10 +18,10 @@ Right = 4
 #ENB = 0
 
 #GPIO PIN
-motor1IN1 = 19
-motor1IN2 = 13
-#motor2IN1 = 6
-#motor2IN2 = 5
+motor1IN1 = 26       #DIR pin 
+motor1IN2 = 19       #PWM pin
+#motor2IN1 = 13      #DIR pin      
+#motor2IN2 = 6       ##PWM pin
 
 #PIN setting
 HIGH = 1
@@ -46,94 +46,121 @@ def isvaildPostion(line,actural):
     
     if line == actural:
         Movement = Forward
-        Speed = 100
+        DutyCycle = 100
         
     #Right
     elif (error > 0 and error <= 15):
         Movement = Right
-        Speed = 30
+        DutyCycle = 30
     elif (error >15  and error <= 30):
         Movement = Right
-        Speed = 50
+        DutyCycle = 50
     
     elif (error >30):
         Movement = Right
-        Speed = 70    
+        DutyCycle = 70    
     #Left
     elif (error < 0 and error > -15):
         Movement = Left
-        Speed = 30
+        DutyCycle = 30
     elif (error >15  and error <= 30):
           Movement = Left
-          Speed = 50
+          DutyCycle = 50
     elif (error <-30):
           Movement = Left
-          Speed = 70
+          DutyCycle = 70
     operation_list.append(Movement)
-    operation_list.append(Speed)
+    operation_list.append(DutyCycle)
     
     return operation_list
 
 def setPinConfig(INA,INB):
     GPIO.setup(INA,GPIO.OUT)
     GPIO.setup(INB,GPIO.OUT)
-    #control PWM 1000khz but L9910S not supported PWM
-    #pwm = GPIO.PWM(EN, 1000)   #not define EN
-    #pwm.start(0)
+    #control PWM 50Khz, and l9910s is using INB PWM pin 
+    currentPWM = 0
+    pwm = GPIO.PWM(INB,50)
+    pwm.start(currentPWM)
+    return pwm
+
+
+"""
+def forward(INA,INB,CurrentPWM,lastPWM):
     
-    #reuturn pwm
+    GPIO.output(INA,HIGH)
+    GPIO.output(INB,LOW) 
+    if CurrentPWM != lastPWM:
+        pwm.ChangeDutyCycle(CurrentPWM)
+    print()
+    """
     
-def setMotorControl(INA,INB,Speed,status):
     
-    #pwm.ChangeDutyCycle(Speed)
+def setMotorControl(INA,INB,last_pwm,DutyCycle,situation):
+    
+    #pwm.ChangeDutyCycle(DutyCycle)
     
     #Forward
     if status == Forward:
+        print("situation is forward")
         GPIO.output(INA,HIGH)
-        GPIO.output(INB,LOW)
     #Backword
     elif status == Backword:
         GPIO.output(INA,LOW)
-        GPIO.output(INB,HIGH)
     #Stop
     elif status == Stop:
+        print("situation is Backword")
         GPIO.output(INA,LOW)
-        GPIO.output(INB,LOW)
     
     # ISSUE Right and Left Mathod prameter is same for Forward
     #Right
     elif status == Right:
+        print("situation is Right")
         GPIO.output(INA,HIGH)
         GPIO.output(INB,LOW)   
     #Left
     elif status == Left:
+        print("situation is left")
         GPIO.output(INA,HIGH)
         GPIO.output(INB,LOW)
-               
-def setMotor(channel,Speed,status):
+       
+    # setting changed dutycycle    
+    if last_pwm != DutyCycle:
+        last_pwm.ChangeDutyCycle(DutyCycle)        
+        last_pwm = DutyCycle        
+        
+def setMotor(channel,pwm,DutyCycle,situation):
+    #print("setMotor prameter",channel,pwm,DutyCycle,situation)
     if channel == MOTOR1:
-        setMotorControl(motor1IN1,motor1IN2,Speed,status)
-    #else:
-    #    setMotorControl(motor2IN1,motor2IN2)
+        setMotorControl(motor1IN1,motor1IN2,pwm,DutyCycle,situation)
+    else:
+        setMotorControl(motor2IN1,motor2IN2,pwm,DutyCycle,situation)
         
 #Motor Control Main_method
 GPIO.setmode(GPIO.BCM)
-setPinConfig(motor1IN1,motor1IN2)
-#setPinConfig(motor2IN1,motor2IN2)
+GPIO.setwarnings(False)
+print("GPIO init")
+pwm1 = setPinConfig(motor1IN1,motor1IN2)
+pwm2 = setPinConfig(motor2IN1,motor2IN2)
+#print("init pwm",pwm1)
 
 
-#END
 while(True):
-    Movement,Speed = isvaildPostion(line,actural)
-    #Forward 100% Speed
+    line = int(input("enter your line postion \n"))
+    print("if your want to terminate this program, enter 7")
+    actural = int(input("enter your line postion \n"))
+    if actural == 7:
+        
+    if
+    Movement,DutyCycle = isvaildPostion(line,actural)
+    #Forward 100% DutyCycle
     if (Movement == Forward):
-        setMotor(MOTOR1,Speed,Movement)
-        #setMotor(MOTOR2,Speed,Movement)
+        setMotor(MOTOR1,DutyCycle,Movement)
+        #setMotor(MOTOR2,DutyCycle,Movement)
         #delay
         sleep(5)
     else:
-        setMotor(MOTOR1,Speed,Movement)
-        #setMotor(MOTOR2,Speed,Movement)
+        setMotor(MOTOR1,DutyCycle,Movement)
+        #setMotor(MOTOR2,DutyCycle,Movement)
         #delay
         sleep(5)
 
